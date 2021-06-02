@@ -22,6 +22,7 @@ public class LibraryService {
     public Books createNewBooks(Long userId, Books books) throws ResourceNotFoundException {
      Users user = usersService.findUserById(userId);
      if (user != null);
+     books.setUsers(user);
      return booksRepository.save(books);
     }
 
@@ -30,6 +31,7 @@ public class LibraryService {
     public MediaFiles createNewMedias(Long userId, MediaFiles mediaFiles) throws ResourceNotFoundException {
         Users user = usersService.findUserById(userId);
         if (user != null);
+        mediaFiles.setUsers(user);
         return mediaRepository.save(mediaFiles);
     }
 

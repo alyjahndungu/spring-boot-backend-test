@@ -3,10 +3,10 @@ package com.qhala.backend.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import net.minidev.json.annotate.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -25,6 +25,14 @@ public class Books {
 
     @JsonProperty(value = "publisher")
     private String publisher;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",nullable = false)
+    @JsonProperty("users")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Users users;
+
 
     public void setId(Long id) {
         this.id = id;
