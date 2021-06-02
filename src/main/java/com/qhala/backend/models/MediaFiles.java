@@ -18,7 +18,7 @@ public class MediaFiles {
     private String fileName;
 
     @JsonProperty(value = "fileType")
-    private  String fileType;
+    private String fileType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)

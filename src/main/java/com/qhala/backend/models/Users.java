@@ -13,8 +13,7 @@ import javax.persistence.Id;
 public class Users {
 
     @JsonIgnore
-    private Long userId;
-
+    private Long id;
 
     @JsonProperty(value = "fullName")
     private String fullName;

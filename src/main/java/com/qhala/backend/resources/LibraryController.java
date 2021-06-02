@@ -16,18 +16,32 @@ public class LibraryController {
    private final LibraryService libraryService;
 
     @PostMapping(value = "/{userId}/books")
-    public ResponseEntity addNewBooks(@Valid @RequestBody Books books,
-                                           @PathVariable Long userId) throws Exception {
+    public ResponseEntity<?> addNewBooks(@Valid @RequestBody Books books,
+                                         @PathVariable Long userId) throws Exception {
         libraryService.createNewBooks(userId, books);
         return new ResponseEntity<>("Added successfully", HttpStatus.OK);
     }
 
     @PostMapping(value = "/{userId}/videos")
-    public ResponseEntity addNewBooks(@Valid @RequestBody MediaFiles mediaFiles,
-                                      @PathVariable Long userId) throws Exception {
+    public ResponseEntity<?> addNewBooks(@Valid @RequestBody MediaFiles mediaFiles,
+                                          @PathVariable Long userId) throws Exception {
         libraryService.createNewMedias(userId, mediaFiles);
         return new ResponseEntity<>("Added successfully", HttpStatus.OK);
     }
+
+    //Get All Books
+
+    @GetMapping(value = "/books")
+    public ResponseEntity<?> getAllBooks(){
+
+    }
+
+    @GetMapping(value = "/videos")
+    public ResponseEntity<?> getAllMedias(){
+
+    }
+
+
 
 
 }
