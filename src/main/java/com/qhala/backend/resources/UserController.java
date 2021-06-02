@@ -1,6 +1,6 @@
 package com.qhala.backend.resources;
 
-import com.qhala.backend.UsersService;
+import com.qhala.backend.services.UsersService;
 import com.qhala.backend.filters.Constants;
 import com.qhala.backend.models.Users;
 import com.qhala.backend.repositories.UsersRepository;

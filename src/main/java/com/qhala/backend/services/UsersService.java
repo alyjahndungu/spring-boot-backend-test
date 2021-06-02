@@ -1,6 +1,7 @@
-package com.qhala.backend;
+package com.qhala.backend.services;
 
 import com.qhala.backend.exceptions.EAuthException;
+import com.qhala.backend.exceptions.ResourceNotFoundException;
 import com.qhala.backend.models.Users;
 import com.qhala.backend.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,11 @@ public class UsersService {
     public Users registerUser(@Valid @RequestBody Users users) throws EAuthException {
         return usersRepository.save(users);
 
+    }
+
+    @Transactional
+    public Users findUserById(long userId) throws ResourceNotFoundException {
+        return usersRepository.findById(userId)
+                .orElseThrow(()->new ResourceNotFoundException("No User Record Found::"+ userId));
     }
 }
