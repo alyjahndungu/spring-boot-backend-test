@@ -13,10 +13,16 @@ import javax.persistence.Id;
 public class Users {
 
     @JsonIgnore
-    private Long id;
+    private Long userId;
 
-    @JsonProperty(value = "username")
-    private String username;
+
+    @JsonProperty(value = "fullName")
+    private String fullName;
+
+    @JsonProperty(value = "email")
+    @Email(message="Must be a valid email")
+    private String email;
+
 
     @JsonProperty(value = "password")
     private String password;
