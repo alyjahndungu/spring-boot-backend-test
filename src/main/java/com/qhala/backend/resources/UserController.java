@@ -2,7 +2,7 @@ package com.qhala.backend.resources;
 
 import com.qhala.backend.models.AuthResponse;
 import com.qhala.backend.models.UserDTO;
-import com.qhala.backend.services.MyDetailsUserService;
+import com.qhala.backend.services.MyUserDetailsService;
 import com.qhala.backend.services.UsersService;
 import com.qhala.backend.models.Users;
 import com.qhala.backend.repositories.UsersRepository;
@@ -31,7 +31,7 @@ public class UserController {
 
     private final UsersService usersService;
     private final UsersRepository usersRepository;
-    private final MyDetailsUserService myDetailsUserService;
+    private final MyUserDetailsService myUserDetailsService;
     private final AuthenticationManager authenticationManager;
     private final JWTUtils jwtUtils;
 
@@ -46,7 +46,7 @@ public class UserController {
             throw new Exception("Incorrect email or password", e);
         }
 
-        final UserDetails userDetails = myDetailsUserService.loadUserByUsername(userDTO.getEmail());
+        final UserDetails userDetails = myUserDetailsService.loadUserByUsername(userDTO.getEmail());
         final String jwtToken = jwtUtils.generateToken(userDetails);
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

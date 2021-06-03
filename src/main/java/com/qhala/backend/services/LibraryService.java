@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class LibraryService {
@@ -34,4 +37,19 @@ public class LibraryService {
         return mediaRepository.save(mediaFiles);
     }
 
+    @Transactional
+    public List<Books> getOneLibraryBooks(long userId) throws ResourceNotFoundException {
+        Users user = usersService.findUserById(userId);
+        return booksRepository.findAll().stream()
+                .filter(books -> books.getUsers().getId() == user.getId())
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<MediaFiles> getOneLibraryMedias(long userId) throws ResourceNotFoundException {
+        Users user = usersService.findUserById(userId);
+        return mediaRepository.findAll().stream()
+                .filter(mediaFiles -> mediaFiles.getUsers().getId() == user.getId())
+                .collect(Collectors.toList());
+    }
 }

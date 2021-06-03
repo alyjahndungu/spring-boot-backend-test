@@ -1,5 +1,6 @@
 package com.qhala.backend.resources;
 
+import com.qhala.backend.exceptions.ResourceNotFoundException;
 import com.qhala.backend.models.Books;
 import com.qhala.backend.models.MediaFiles;
 import com.qhala.backend.services.LibraryService;
@@ -7,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,17 +33,30 @@ public class LibraryController {
         return new ResponseEntity<>("Added successfully", HttpStatus.OK);
     }
 
+
+    @GetMapping("/books/{user_id}")
+    ResponseEntity<List<Books>> getOneLibraryBooks(@PathVariable(value = "user_id") long userId) throws ResourceNotFoundException {
+        return ResponseEntity.ok
+                (libraryService.getOneLibraryBooks(userId));
+    }
+
+    @GetMapping("/videos/{user_id}")
+    ResponseEntity<List<MediaFiles>> getOneLibraryMedia(@PathVariable(value = "user_id") long userId) throws ResourceNotFoundException {
+        return ResponseEntity.ok
+                (libraryService.getOneLibraryMedias(userId));
+    }
+
     //Get All Books
 
-    @GetMapping(value = "/books")
-    public ResponseEntity<?> getAllBooks(){
-
-    }
-
-    @GetMapping(value = "/videos")
-    public ResponseEntity<?> getAllMedias(){
-
-    }
+//    @GetMapping(value = "/books")
+//    public ResponseEntity<?> getAllBooks(){
+//
+//    }
+//
+//    @GetMapping(value = "/videos")
+//    public ResponseEntity<?> getAllMedias(){
+//
+//    }
 
 
 

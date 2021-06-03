@@ -1,6 +1,6 @@
 package com.qhala.backend.filters;
 
-import com.qhala.backend.services.MyDetailsUserService;
+import com.qhala.backend.services.MyUserDetailsService;
 import com.qhala.backend.utils.JWTUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +24,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final JWTUtils jwtUtils;
 
-    private final MyDetailsUserService myUserDetailsService;
+    private final MyUserDetailsService myUserDetailsService;
 
-    public AuthTokenFilter(JWTUtils jwtUtils, MyDetailsUserService myUserDetailsService) {
+    public AuthTokenFilter(JWTUtils jwtUtils, MyUserDetailsService myUserDetailsService) {
         this.jwtUtils = jwtUtils;
         this.myUserDetailsService = myUserDetailsService;
     }
