@@ -1,22 +1,27 @@
 package com.qhala.backend.resources;
 
+import com.qhala.backend.models.AuthResponse;
+import com.qhala.backend.models.UserDTO;
+import com.qhala.backend.services.MyDetailsUserService;
 import com.qhala.backend.services.UsersService;
-import com.qhala.backend.filters.Constants;
 import com.qhala.backend.models.Users;
 import com.qhala.backend.repositories.UsersRepository;
-import com.sun.org.apache.xml.internal.security.algorithms.SignatureAlgorithm;
+import com.qhala.backend.utils.JWTUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,13 +31,31 @@ public class UserController {
 
     private final UsersService usersService;
     private final UsersRepository usersRepository;
+    private final MyDetailsUserService myDetailsUserService;
+    private final AuthenticationManager authenticationManager;
+    private final JWTUtils jwtUtils;
 
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> loginUser(@RequestBody Map<String, Object> userMap) {
-        String email = (String) userMap.get("email");
-        String password = (String) userMap.get("password");
-        Users user = usersService.validateUser(email, password);
-        return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
+    @PostMapping(value = "/login")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDTO userDTO) throws Exception {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword())
+            );
+
+        } catch (BadCredentialsException e) {
+            throw new Exception("Incorrect email or password", e);
+        }
+
+        final UserDetails userDetails = myDetailsUserService.loadUserByUsername(userDTO.getEmail());
+        final String jwtToken = jwtUtils.generateToken(userDetails);
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        System.out.println(jwtToken);
+        return ResponseEntity.ok(new AuthResponse(jwtToken,
+                userDetails.getUsername(),
+                roles));
     }
 
     @PostMapping("/register")
@@ -41,23 +64,10 @@ public class UserController {
         if(u.isPresent()){
             return new ResponseEntity("Email is already taken!!!!!", HttpStatus.BAD_REQUEST);
         }
-        Users user = usersService.registerUser(users);
+        usersService.registerUser(users);
 
-        return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
+        return new ResponseEntity("New user created successfully", HttpStatus.CREATED);
     }
 
-    private Map<String, String> generateJWTToken(Users user) {
-        long timestamp = System.currentTimeMillis();
-        String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, Constants.API_SECRET_KEY)
-                .setIssuedAt(new Date(timestamp))
-                .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
-                .claim("userId", user.getId())
-                .claim("email", user.getEmail())
-                .claim("fullName", user.getFullName())
-                .compact();
-        Map<String, String> map = new HashMap<>();
-        map.put("token", token);
-        return map;
-    }
 
 }

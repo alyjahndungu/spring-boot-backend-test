@@ -6,7 +6,6 @@ import com.qhala.backend.models.MediaFiles;
 import com.qhala.backend.models.Users;
 import com.qhala.backend.repositories.BooksRepository;
 import com.qhala.backend.repositories.MediaRepository;
-import com.qhala.backend.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

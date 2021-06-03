@@ -25,7 +25,7 @@ public class UsersService {
     }
 
     @Transactional
-    public Users registerUser(@Valid @RequestBody Users users) throws EAuthException {
+    public Users registerUser(@RequestBody Users users) throws EAuthException {
         return usersRepository.save(users);
 
     }
