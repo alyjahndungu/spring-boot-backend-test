@@ -52,4 +52,22 @@ public class LibraryService {
                 .filter(mediaFiles -> mediaFiles.getUsers().getId() == user.getId())
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public Books findBooksById(long bookId) throws ResourceNotFoundException {
+        return booksRepository.findById(bookId)
+                .orElseThrow(()->new ResourceNotFoundException("No Book Record Found::"+ bookId));
+    }
+
+    @Transactional
+    public Books updateBooksStatus(Long id, Books books) throws ResourceNotFoundException {
+        Books bk = findBooksById(id);
+
+        bk.setAuthor(books.getAuthor());
+        bk.setTitle(books.getTitle());
+        bk.setISBN(books.getISBN());
+        return booksRepository.save(bk);
+
+    }
+
 }

@@ -46,17 +46,12 @@ public class LibraryController {
                 (libraryService.getOneLibraryMedias(userId));
     }
 
-    //Get All Books
+    @PutMapping("/books/{id}")
+    public ResponseEntity updateLands(@Valid @RequestBody Books books, @PathVariable Long id) throws ResourceNotFoundException {
+       libraryService.updateBooksStatus( id, books);
+        return new ResponseEntity<>("updated successfully", HttpStatus.OK);
+    }
 
-//    @GetMapping(value = "/books")
-//    public ResponseEntity<?> getAllBooks(){
-//
-//    }
-//
-//    @GetMapping(value = "/videos")
-//    public ResponseEntity<?> getAllMedias(){
-//
-//    }
 
 
 
